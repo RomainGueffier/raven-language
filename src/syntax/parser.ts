@@ -2,7 +2,6 @@ import type {
   BinaryExpression,
   Expression,
   Identifier,
-  NullLiteral,
   NumericLiteral,
   Program,
   Statement,
@@ -52,12 +51,6 @@ export default class Parser {
           type: 'Identifier',
           symbol: value,
         } as Identifier
-
-      case TokenType.Null:
-        return {
-          type: 'NullLiteral',
-          value: 'null',
-        } as NullLiteral
 
       case TokenType.Number:
         return {

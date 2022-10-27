@@ -10,14 +10,13 @@
  * [ Let, Identifier, EqualOperator, Number, BinaryOperator, Identifier, BinaryOperator, Identifier ]
  */
 export const enum TokenType {
-  // Variable types
-  Null = 'null',
+  // Literal types
   Number = 'number',
   Boolean = 'boolean',
-
-  // Variable definition
-  Let = 'let',
   Identifier = 'identifier',
+
+  // keywords
+  Let = 'let',
 
   // Grouping
   ParenthesisOpen = 'parenthesis-open',
@@ -35,8 +34,7 @@ export interface Token {
 }
 
 const TOKEN_RESERVED_KEYWORDS: Record<string, TokenType> = {
-  cho: TokenType.Let,
-  null: TokenType.Null,
+  let: TokenType.Let,
 }
 
 /**
@@ -114,7 +112,7 @@ export function tokenize(sourceCode: string): Token[] {
       const reserved = TOKEN_RESERVED_KEYWORDS?.[identifier]
       tokens.push({
         value: identifier,
-        type: reserved,
+        type: reserved || TokenType.Identifier,
       })
       continue
     }
