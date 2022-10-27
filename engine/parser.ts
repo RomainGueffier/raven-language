@@ -2,6 +2,7 @@ import type {
   BinaryExpression,
   Expression,
   Identifier,
+  NullLiteral,
   NumericLiteral,
   Program,
   Statement,
@@ -51,11 +52,19 @@ export default class Parser {
           type: 'Identifier',
           symbol: value,
         } as Identifier
+
+      case TokenType.Null:
+        return {
+          type: 'NullLiteral',
+          value: 'null',
+        } as NullLiteral
+
       case TokenType.Number:
         return {
           type: 'NumericLiteral',
           value: parseFloat(value),
         } as NumericLiteral
+
       case TokenType.ParenthesisOpen:
         const expression = this.#parseExpression()
         this.#expect(
@@ -63,6 +72,7 @@ export default class Parser {
           'Unespected token found inside parenthesis expression. Expecting closing parenthesis'
         )
         return expression
+
       default:
         throw new Error(
           `Unhandled primary expression parsing at token: ${value} with type: ${type}`
