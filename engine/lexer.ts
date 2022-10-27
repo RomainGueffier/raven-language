@@ -110,10 +110,11 @@ export function tokenize(sourceCode: string): Token[] {
       while (codeChars.length > 0 && codeChars[0].match(/[a-zA-Z]/)) {
         identifier += codeChars.shift()
       }
+
       const reserved = TOKEN_RESERVED_KEYWORDS?.[identifier]
       tokens.push({
         value: identifier,
-        type: reserved === TokenType.Number ? reserved : TokenType.Identifier,
+        type: reserved,
       })
       continue
     }

@@ -3,13 +3,22 @@ import readline from 'node:readline'
 import util from 'node:util'
 import { tokenize } from './engine/lexer'
 import Parser from './engine/parser'
+import { evaluate } from './runtime/interpreter'
+
+const runner = (sourceCode: string) => {
+  const parser = new Parser()
+  const program = parser.produceAST(sourceCode)
+  const result = evaluate(program)
+  console.log(
+    util.inspect(result, { showHidden: false, depth: null, colors: true })
+  )
+}
 
 const args = process.argv?.slice(2)
 
 if (args?.[0] === '-f' && args?.[1]) {
   const source = fs.readFileSync(args?.[1], 'utf8')
-  const tokens = tokenize(source)
-  tokens.forEach((token) => console.log(token))
+  runner(source)
   process.exit(0)
 }
 
@@ -24,12 +33,7 @@ if (args?.length === 0) {
     repl.question('💲 ', (input) => {
       if (!input) process.exit(0)
       if (input.trim() === 'exit') repl.close()
-
-      const parser = new Parser()
-      const program = parser.produceAST(input)
-      console.log(
-        util.inspect(program, { showHidden: false, depth: null, colors: true })
-      )
+      runner(input)
       prompt()
     })
   }
