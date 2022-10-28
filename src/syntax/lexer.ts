@@ -90,9 +90,9 @@ export function tokenize(sourceCode: string): Token[] {
     // multi character tokens
 
     // numbers
-    if (codeChars[0].match(/[0-9]/)) {
+    if (codeChars[0].match(/\d/)) {
       let num = ''
-      while (codeChars.length > 0 && codeChars[0].match(/[0-9]/)) {
+      while (codeChars.length > 0 && codeChars[0].match(/\d/)) {
         num += codeChars.shift()
       }
       tokens.push({
