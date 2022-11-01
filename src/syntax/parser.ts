@@ -5,6 +5,7 @@ import type {
   NumericLiteral,
   Program,
   Statement,
+  VarDeclaration,
 } from './ast'
 import { Token, tokenize, TokenType } from './lexer'
 
@@ -113,6 +114,45 @@ export default class Parser {
     return left
   }
 
+  #parseVarDeclaration(): Statement {
+    const isConstant = this.#next().type === TokenType.Const
+    const identifier = this.#expect(
+      TokenType.Identifier,
+      'Expected identifier name following let or const keywords'
+    ).value
+
+    if (this.#at().type === TokenType.SemiColons) {
+      this.#next()
+      if (isConstant) {
+        throw new Error('Must assign value to const expression!')
+      }
+      return {
+        type: 'VarDeclaration',
+        identifier,
+        constant: false,
+      } as VarDeclaration
+    }
+
+    this.#expect(
+      TokenType.EqualOperator,
+      'Expected assignation equal token following a var identifier!'
+    )
+
+    const declaration = {
+      type: 'VarDeclaration',
+      value: this.#parseExpression(),
+      constant: isConstant,
+      identifier,
+    } as VarDeclaration
+
+    this.#expect(
+      TokenType.SemiColons,
+      'Variable declaration must end with semicolons!'
+    )
+
+    return declaration
+  }
+
   // Order of precedence:
   // Addition
   // Multiplication
@@ -123,7 +163,13 @@ export default class Parser {
 
   #parseStatement(): Statement {
     // skip to parseExpr
-    return this.#parseExpression()
+    switch (this.#at().type) {
+      case TokenType.Let:
+      case TokenType.Const:
+        return this.#parseVarDeclaration()
+      default:
+        return this.#parseExpression()
+    }
   }
 
   produceAST(sourceCode: string): Program {

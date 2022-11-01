@@ -16,11 +16,13 @@ export const enum TokenType {
   Identifier = 'identifier',
 
   // keywords
-  Let = 'let',
+  Let = 'mutable-var',
+  Const = 'constant-var',
 
   // Grouping
   ParenthesisOpen = 'parenthesis-open',
   ParenthesisClose = 'parenthesis-close',
+  SemiColons = 'semi', // end of line
   EOF = 'eof', // end of file
 
   // Operations
@@ -35,6 +37,7 @@ export interface Token {
 
 const TOKEN_RESERVED_KEYWORDS: Record<string, TokenType> = {
   let: TokenType.Let,
+  const: TokenType.Const,
 }
 
 /**
@@ -56,6 +59,12 @@ export function tokenize(sourceCode: string): Token[] {
 
     // operator tokens
     switch (codeChars[0]) {
+      case ';':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.SemiColons,
+        })
+        continue
       case '(':
         tokens.push({
           value: codeChars.shift()!,

@@ -5,7 +5,11 @@
  */
 
 export type NodeType =
+  // Statements
   | 'Program'
+  | 'VarDeclaration'
+
+  // Expressions
   | 'NumericLiteral'
   | 'Identifier'
   | 'BinaryExpression'
@@ -18,6 +22,13 @@ export interface Statement {
 export interface Program extends Statement {
   type: 'Program'
   body: Statement[]
+}
+
+export interface VarDeclaration extends Statement {
+  type: 'VarDeclaration'
+  constant: boolean
+  identifier: string
+  value?: Expression
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
