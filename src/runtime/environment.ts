@@ -16,13 +16,9 @@ export default class Environment {
   #constants: Set<string>
 
   constructor(parentEnv?: Environment) {
-    const global = parentEnv ? true : false
-
     this.#parent = parentEnv
     this.#variables = new Map()
     this.#constants = new Set()
-
-    if (global) setupScope(this)
   }
 
   declareVariable(
