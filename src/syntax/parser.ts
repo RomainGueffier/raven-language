@@ -1,4 +1,5 @@
 import type {
+  AssignmentExpression,
   BinaryExpression,
   Expression,
   Identifier,
@@ -96,6 +97,10 @@ export default class Parser {
 
   /**
    * Addition and Substraction
+   * // Order of precedence:
+  // Addition
+  // Multiplication
+  // Primary
    */
   #parseAdditiveExpression(): BinaryExpression {
     let left = this.#parseMultiplicativeExpression()
@@ -153,12 +158,25 @@ export default class Parser {
     return declaration
   }
 
-  // Order of precedence:
-  // Addition
-  // Multiplication
-  // Primary
+  #parseAssignmentExpression(): Expression {
+    const left = this.#parseAdditiveExpression()
+
+    if (this.#at().type === TokenType.EqualOperator) {
+      this.#next()
+      const value = this.#parseAssignmentExpression()
+
+      return {
+        value,
+        assigne: left,
+        type: 'AssignmentExpression',
+      } as AssignmentExpression
+    }
+
+    return left
+  }
+
   #parseExpression(): Expression {
-    return this.#parseAdditiveExpression()
+    return this.#parseAssignmentExpression()
   }
 
   #parseStatement(): Statement {

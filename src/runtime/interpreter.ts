@@ -1,4 +1,5 @@
 import type {
+  AssignmentExpression,
   BinaryExpression,
   Identifier,
   NumericLiteral,
@@ -7,7 +8,11 @@ import type {
   VarDeclaration,
 } from '../syntax/ast'
 import Environment from './environment'
-import { evalBinaryExpression, evalIdentifier } from './eval/expressions'
+import {
+  evalAssignment,
+  evalBinaryExpression,
+  evalIdentifier,
+} from './eval/expressions'
 import { evalProgram, evalVarDeclaration } from './eval/statements'
 import { NumberValue, RuntimeValue } from './values'
 
@@ -19,6 +24,9 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
 
     case 'Identifier':
       return evalIdentifier(astNode as Identifier, env)
+
+    case 'AssignmentExpression':
+      return evalAssignment(astNode as AssignmentExpression, env)
 
     case 'BinaryExpression':
       return evalBinaryExpression(astNode as BinaryExpression, env)

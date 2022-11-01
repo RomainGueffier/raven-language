@@ -48,7 +48,6 @@ export default class Environment {
   }
 
   resolve(varName: string): Environment {
-    console.log(this.#variables)
     if (this.#variables.has(varName)) {
       return this
     }

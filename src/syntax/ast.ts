@@ -10,6 +10,7 @@ export type NodeType =
   | 'VarDeclaration'
 
   // Expressions
+  | 'AssignmentExpression'
   | 'NumericLiteral'
   | 'Identifier'
   | 'BinaryExpression'
@@ -33,6 +34,12 @@ export interface VarDeclaration extends Statement {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Expression extends Statement {}
+
+export interface AssignmentExpression extends Expression {
+  type: 'AssignmentExpression'
+  assigne: Expression
+  value: Expression
+}
 
 export interface Identifier extends Expression {
   type: 'Identifier'

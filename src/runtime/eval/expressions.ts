@@ -1,4 +1,8 @@
-import { BinaryExpression, Identifier } from '../../syntax/ast'
+import {
+  AssignmentExpression,
+  BinaryExpression,
+  Identifier,
+} from '../../syntax/ast'
 import Environment from '../environment'
 import { evaluate } from '../interpreter'
 import { makeNull, NumberValue, RuntimeValue } from '../values'
@@ -53,4 +57,18 @@ export function evalIdentifier(
   env: Environment
 ): RuntimeValue {
   return env.lookupVariable(identifier.symbol)
+}
+
+export function evalAssignment(
+  node: AssignmentExpression,
+  env: Environment
+): RuntimeValue {
+  if (node.assigne.type !== 'Identifier') {
+    throw new Error(`Cannot assign, invalid LHS inside assignment expression`, {
+      cause: node.assigne,
+    })
+  }
+
+  const varName = (node.assigne as Identifier).symbol
+  return env.assignVariable(varName, evaluate(node.value, env))
 }
