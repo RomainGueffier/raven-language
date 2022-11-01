@@ -4,7 +4,9 @@ import type {
   Expression,
   Identifier,
   NumericLiteral,
+  ObjectLiteral,
   Program,
+  Property,
   Statement,
   VarDeclaration,
 } from './ast'
@@ -126,7 +128,7 @@ export default class Parser {
       'Expected identifier name following let or const keywords'
     ).value
 
-    if (this.#at().type === TokenType.SemiColons) {
+    if (this.#at().type === TokenType.Semi) {
       this.#next()
       if (isConstant) {
         throw new Error('Must assign value to const expression!')
@@ -151,15 +153,64 @@ export default class Parser {
     } as VarDeclaration
 
     this.#expect(
-      TokenType.SemiColons,
-      'Variable declaration must end with semicolons!'
+      TokenType.Semi,
+      'Variable declaration must end with semicolon!'
     )
 
     return declaration
   }
 
+  #parseObjectExpression(): Expression {
+    if (this.#at().type !== TokenType.CurlyBracketOpen) {
+      return this.#parseAdditiveExpression()
+    }
+
+    this.#next() // advance past open bracket
+
+    const properties: Property[] = []
+
+    while (this.#notEOF() && this.#at().type !== TokenType.CurlyBracketClose) {
+      // parse { key: val, key2: val }
+      const key = this.#expect(
+        TokenType.Identifier,
+        'Object key expected'
+      ).value
+
+      // allow shortland { key: pair } => { key, }
+      if (this.#at().type === TokenType.Comma) {
+        this.#next() // advance past the comma
+        properties.push({
+          key,
+          type: 'Property',
+        })
+        continue
+        // allow shortland { key: pair } => { key }
+      } else if (this.#at().type === TokenType.CurlyBracketClose) {
+        properties.push({ key, type: 'Property' })
+        continue
+      }
+
+      this.#expect(TokenType.Colon, 'Missing colon after identifier in Object')
+      const value = this.#parseExpression()
+
+      properties.push({ type: 'Property', value, key })
+      if (this.#at().type !== TokenType.CurlyBracketClose) {
+        this.#expect(
+          TokenType.Comma,
+          'Expected comma or closing bracket following property'
+        )
+      }
+    }
+
+    this.#expect(
+      TokenType.CurlyBracketClose,
+      'Expected closing bracket for object declaration!'
+    )
+    return { type: 'ObjectLiteral', properties } as ObjectLiteral
+  }
+
   #parseAssignmentExpression(): Expression {
-    const left = this.#parseAdditiveExpression()
+    const left = this.#parseObjectExpression()
 
     if (this.#at().type === TokenType.EqualOperator) {
       this.#next()

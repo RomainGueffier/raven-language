@@ -1,9 +1,9 @@
 import util from 'node:util'
 import Parser from './syntax/parser'
-import Environment from './runtime/environment'
+import { createGlobalEnvironment } from './runtime/environment'
 import { evaluate } from './runtime/interpreter'
 
-const env = new Environment()
+const env = createGlobalEnvironment()
 const parser = new Parser()
 
 export default function main(sourceCode: string) {
@@ -14,6 +14,8 @@ export default function main(sourceCode: string) {
       util.inspect(result, { showHidden: false, depth: null, colors: true })
     )
   } catch (error) {
-    console.error(error)
+    console.error(
+      util.inspect(error, { showHidden: false, depth: null, colors: true })
+    )
   }
 }

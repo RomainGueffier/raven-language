@@ -1,19 +1,28 @@
 import { makeBoolean, makeNull, RuntimeValue } from './values'
 
+export function createGlobalEnvironment() {
+  const env = new Environment()
+  // default reserved values
+  env.declareVariable('true', makeBoolean(true), true)
+  env.declareVariable('false', makeBoolean(false), true)
+  env.declareVariable('null', makeNull(), true)
+
+  return env
+}
+
 export default class Environment {
   #parent?: Environment
   #variables: Map<string, RuntimeValue>
   #constants: Set<string>
 
   constructor(parentEnv?: Environment) {
+    const global = parentEnv ? true : false
+
     this.#parent = parentEnv
     this.#variables = new Map()
     this.#constants = new Set()
 
-    // default reserved values
-    this.declareVariable('true', makeBoolean(true), true)
-    this.declareVariable('false', makeBoolean(false), true)
-    this.declareVariable('null', makeNull(), true)
+    if (global) setupScope(this)
   }
 
   declareVariable(

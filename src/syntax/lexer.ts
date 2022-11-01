@@ -22,7 +22,13 @@ export const enum TokenType {
   // Grouping
   ParenthesisOpen = 'parenthesis-open',
   ParenthesisClose = 'parenthesis-close',
-  SemiColons = 'semi', // end of line
+  BracketOpen = 'bracket-open',
+  BracketClose = 'bracket-close',
+  CurlyBracketOpen = 'bracket-curly-open',
+  CurlyBracketClose = 'bracket-curly-close',
+  Comma = 'comma',
+  Colon = 'colon',
+  Semi = 'semi', // end of line
   EOF = 'eof', // end of file
 
   // Operations
@@ -62,7 +68,43 @@ export function tokenize(sourceCode: string): Token[] {
       case ';':
         tokens.push({
           value: codeChars.shift()!,
-          type: TokenType.SemiColons,
+          type: TokenType.Semi,
+        })
+        continue
+      case ',':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.Comma,
+        })
+        continue
+      case ':':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.Colon,
+        })
+        continue
+      case '[':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.BracketOpen,
+        })
+        continue
+      case ']':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.BracketClose,
+        })
+        continue
+      case '{':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.CurlyBracketOpen,
+        })
+        continue
+      case '}':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.CurlyBracketClose,
         })
         continue
       case '(':

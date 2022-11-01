@@ -3,6 +3,7 @@ import type {
   BinaryExpression,
   Identifier,
   NumericLiteral,
+  ObjectLiteral,
   Program,
   Statement,
   VarDeclaration,
@@ -12,6 +13,7 @@ import {
   evalAssignment,
   evalBinaryExpression,
   evalIdentifier,
+  evalObjectExpression,
 } from './eval/expressions'
 import { evalProgram, evalVarDeclaration } from './eval/statements'
 import { NumberValue, RuntimeValue } from './values'
@@ -24,6 +26,9 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
 
     case 'Identifier':
       return evalIdentifier(astNode as Identifier, env)
+
+    case 'ObjectLiteral':
+      return evalObjectExpression(astNode as ObjectLiteral, env)
 
     case 'AssignmentExpression':
       return evalAssignment(astNode as AssignmentExpression, env)

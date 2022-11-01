@@ -2,10 +2,11 @@ import {
   AssignmentExpression,
   BinaryExpression,
   Identifier,
+  ObjectLiteral,
 } from '../../syntax/ast'
 import Environment from '../environment'
 import { evaluate } from '../interpreter'
-import { makeNull, NumberValue, RuntimeValue } from '../values'
+import { makeNull, NumberValue, ObjectValue, RuntimeValue } from '../values'
 
 export function evalNumericBinaryExpression(
   left: number,
@@ -71,4 +72,19 @@ export function evalAssignment(
 
   const varName = (node.assigne as Identifier).symbol
   return env.assignVariable(varName, evaluate(node.value, env))
+}
+
+export function evalObjectExpression(
+  obj: ObjectLiteral,
+  env: Environment
+): RuntimeValue {
+  const object = { type: 'object', properties: new Map() } as ObjectValue
+
+  obj.properties.forEach(({ key, value }) => {
+    const runtimeVal =
+      value === undefined ? env.lookupVariable(key) : evaluate(value, env)
+    object.properties.set(key, runtimeVal)
+  })
+
+  return object
 }

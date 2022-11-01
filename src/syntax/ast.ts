@@ -11,6 +11,10 @@ export type NodeType =
 
   // Expressions
   | 'AssignmentExpression'
+
+  // Literals
+  | 'Property'
+  | 'ObjectLiteral'
   | 'NumericLiteral'
   | 'Identifier'
   | 'BinaryExpression'
@@ -41,6 +45,13 @@ export interface AssignmentExpression extends Expression {
   value: Expression
 }
 
+export interface BinaryExpression extends Expression {
+  type: 'BinaryExpression'
+  left: NumericLiteral | BinaryExpression
+  right: NumericLiteral | BinaryExpression
+  operator: string
+}
+
 export interface Identifier extends Expression {
   type: 'Identifier'
   symbol: string
@@ -51,9 +62,15 @@ export interface NumericLiteral extends Expression {
   value: number
 }
 
-export interface BinaryExpression extends Expression {
-  type: 'BinaryExpression'
-  left: NumericLiteral | BinaryExpression
-  right: NumericLiteral | BinaryExpression
-  operator: string
+// OBJECTS
+export interface Property extends Expression {
+  type: 'Property'
+  key: string
+  value?: Expression
 }
+
+export interface ObjectLiteral extends Expression {
+  type: 'ObjectLiteral'
+  properties: Property[]
+}
+// OBJECTS
