@@ -1,8 +1,10 @@
 import type {
   AssignmentExpression,
   BinaryExpression,
+  CallExpression,
   Expression,
   Identifier,
+  MemberExpression,
   NumericLiteral,
   ObjectLiteral,
   Program,
@@ -77,15 +79,110 @@ export default class Parser {
     }
   }
 
+  // foo.x()
+  #parseCallMemberExpression(): Expression {
+    const member = this.#parseMemberExpression()
+
+    if (this.#at().type === TokenType.ParenthesisOpen) {
+      return this.#parseCallExpression(member)
+    }
+
+    return member
+  }
+
+  #parseCallExpression(caller: Expression): Expression {
+    let callExpression: CallExpression = {
+      type: 'CallExpression',
+      caller,
+      args: this.#parseArgs(),
+    }
+
+    if (this.#at().type === TokenType.ParenthesisOpen) {
+      callExpression = this.#parseCallExpression(
+        callExpression
+      ) as CallExpression
+    }
+
+    return callExpression
+  }
+
+  #parseArgs(): Expression[] {
+    this.#expect(TokenType.ParenthesisOpen, 'Expected open parenthesis')
+    const args =
+      this.#at().type === TokenType.ParenthesisClose
+        ? []
+        : this.#parseArgsList()
+
+    this.#expect(
+      TokenType.ParenthesisClose,
+      'Missing closing parenthesis inside argument list'
+    )
+    return args
+  }
+
+  #parseArgsList(): Expression[] {
+    const args = [this.#parseAssignmentExpression()]
+
+    while (
+      this.#notEOF() &&
+      this.#at().type === TokenType.Comma &&
+      this.#next()
+    ) {
+      args.push(this.#parseAssignmentExpression())
+    }
+
+    return args
+  }
+
+  #parseMemberExpression(): Expression {
+    let object = this.#parsePrimaryExpression() as MemberExpression
+
+    while (
+      this.#at().type === TokenType.Dot ||
+      this.#at().type === TokenType.BracketOpen
+    ) {
+      const operator = this.#next()
+      let property: Expression
+      let computed: boolean
+
+      // no computed value aka obj.expr
+      if (operator.type === TokenType.Dot) {
+        computed = false
+        property = this.#parsePrimaryExpression()
+
+        if (property.type !== 'Identifier') {
+          throw new Error('Cannot use dot operator on a non identifier!')
+        }
+      } else {
+        computed = true
+        property = this.#parseExpression()
+
+        this.#expect(
+          TokenType.BracketClose,
+          'Missing closing bracket in computed value'
+        )
+      }
+
+      object = {
+        type: 'MemberExpression',
+        object,
+        property,
+        computed,
+      }
+    }
+
+    return object
+  }
+
   /**
    * Multiplication and Division
    */
   #parseMultiplicativeExpression(): BinaryExpression {
-    let left = this.#parsePrimaryExpression() as BinaryExpression
+    let left = this.#parseCallMemberExpression() as BinaryExpression
 
     while (this.#at().value.match(/\*|\/|\%|\^/)) {
       const operator = this.#next().value
-      const right = this.#parsePrimaryExpression() as NumericLiteral
+      const right = this.#parseCallMemberExpression() as BinaryExpression
       left = {
         type: 'BinaryExpression',
         left,

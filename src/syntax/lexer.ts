@@ -27,6 +27,7 @@ export const enum TokenType {
   CurlyBracketOpen = 'bracket-curly-open',
   CurlyBracketClose = 'bracket-curly-close',
   Comma = 'comma',
+  Dot = 'dot',
   Colon = 'colon',
   Semi = 'semi', // end of line
   EOF = 'eof', // end of file
@@ -75,6 +76,12 @@ export function tokenize(sourceCode: string): Token[] {
         tokens.push({
           value: codeChars.shift()!,
           type: TokenType.Comma,
+        })
+        continue
+      case '.':
+        tokens.push({
+          value: codeChars.shift()!,
+          type: TokenType.Dot,
         })
         continue
       case ':':
