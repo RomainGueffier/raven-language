@@ -2,6 +2,7 @@ import type {
   AssignmentExpression,
   BinaryExpression,
   CallExpression,
+  FunctionDeclaration,
   Identifier,
   NumericLiteral,
   ObjectLiteral,
@@ -17,7 +18,11 @@ import {
   evalIdentifier,
   evalObjectExpression,
 } from './eval/expressions.js'
-import { evalProgram, evalVarDeclaration } from './eval/statements.js'
+import {
+  evalFunctionDeclaration,
+  evalProgram,
+  evalVarDeclaration,
+} from './eval/statements.js'
 import { NumberValue, RuntimeValue } from './values.js'
 
 export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
@@ -46,6 +51,9 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
 
     case 'VarDeclaration':
       return evalVarDeclaration(astNode as VarDeclaration, env)
+
+    case 'FunctionDeclaration':
+      return evalFunctionDeclaration(astNode as FunctionDeclaration, env)
 
     default:
       throw new Error('This AST Node has not yet been implemented', {

@@ -1,6 +1,13 @@
+import { Statement } from '../syntax/ast.js'
 import Environment from './environment.js'
 
-export type ValueType = 'null' | 'number' | 'boolean' | 'object' | 'function'
+export type ValueType =
+  | 'null'
+  | 'number'
+  | 'boolean'
+  | 'object'
+  | 'native-function'
+  | 'function'
 
 export interface RuntimeValue {
   type: ValueType
@@ -44,10 +51,18 @@ export type FunctionCall = (
 ) => RuntimeValue
 
 export interface NativeFunctionValue extends RuntimeValue {
-  type: 'function'
+  type: 'native-function'
   call: FunctionCall
 }
 
 export function makeNativeFunction(call: FunctionCall): NativeFunctionValue {
-  return { type: 'function', call }
+  return { type: 'native-function', call }
+}
+
+export interface FunctionValue extends RuntimeValue {
+  type: 'function'
+  name: string
+  parameters: string[]
+  declarationEnv: Environment
+  body: Statement[]
 }

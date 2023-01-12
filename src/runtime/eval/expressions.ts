@@ -13,6 +13,7 @@ import {
   NumberValue,
   ObjectValue,
   RuntimeValue,
+  FunctionValue,
 } from '../values.js'
 
 export function evalNumericBinaryExpression(
@@ -105,8 +106,27 @@ export function evalCallExpression(
   // evaluate function itself
   const fn = evaluate(expression.caller, env)
 
-  if (fn.type !== 'function')
-    throw `Cannot call a value that is not a function: ${JSON.stringify(fn)}`
+  if (fn.type === 'native-function') {
+    return (fn as NativeFunctionValue).call(args, env)
+  }
 
-  return (fn as NativeFunctionValue).call(args, env)
+  if (fn.type === 'function') {
+    const fnValue = fn as FunctionValue
+    const scope = new Environment(fnValue.declarationEnv)
+    for (let i = 0; i < fnValue.parameters.length; i++) {
+      // todo check the bounds here, verify arity of function
+      const varName = fnValue.parameters[i]
+      scope.declareVariable(varName, args[i], false)
+    }
+
+    let result: RuntimeValue = makeNull() // default null
+    // evaluate the fn body stmt by stmt
+    fnValue.body.forEach((stmt) => {
+      result = evaluate(stmt, scope)
+    })
+
+    return result
+  }
+
+  throw `Cannot call a value that is not a function: ${JSON.stringify(fn)}`
 }
