@@ -1,0 +1,25 @@
+{
+  "name": "raven",
+  "displayName": "Raven",
+  "description": "Raven Programming Language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "rv",
+      "aliases": ["Raven", "rv"],
+      "extensions": [".rv"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "rv",
+      "scopeName": "source.rv",
+      "path": "./syntaxes/rv.tmLanguage.json"
+    }]
+  }
+}

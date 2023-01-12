@@ -1,0 +1,70 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Raven",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#reserved-keywords"
+    },
+    { "include": "#expression" }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.rv",
+          "match": "\\b(if|while|for|return)\\b"
+        }
+      ]
+    },
+    "reserved-keywords": {
+      "patterns": [
+        {
+          "name": "entity.name.function.member.rv",
+          "match": "\\b(print|time|bool|null)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.rv",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.rv",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "expression": {
+      "patterns": [
+        { "include": "#strings" },
+        { "include": "#paren-expression" }
+      ]
+    },
+    "paren-expression": {
+      "begin": "\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.paren.open" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.paren.close" }
+      },
+      "name": "expression.group",
+      "patterns": [{ "include": "#expression" }]
+    }
+  },
+  "scopeName": "source.rv"
+}
