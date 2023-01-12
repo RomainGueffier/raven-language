@@ -1,9 +1,14 @@
 import {
+  BooleanValue,
   makeBoolean,
   makeNativeFunction,
   makeNull,
   makeNumber,
+  NativeFunctionValue,
+  NumberValue,
+  ObjectValue,
   RuntimeValue,
+  StringValue,
 } from './values.js'
 
 export function createGlobalEnvironment() {
@@ -17,7 +22,56 @@ export function createGlobalEnvironment() {
   env.declareVariable(
     'print',
     makeNativeFunction((args, _scope) => {
-      console.log(...args)
+      console.log(
+        args
+          .map((arg) => {
+            switch (arg.type) {
+              case 'string':
+                return (arg as StringValue).value
+              case 'number':
+                return (arg as NumberValue).value
+              case 'boolean':
+                return (arg as BooleanValue).value
+              case 'null':
+                return 'null'
+              case 'object':
+                const propertyToString = (properties: RuntimeValue) => {
+                  return [...(properties as ObjectValue).properties]
+                    .map((property) => {
+                      let value = ''
+                      switch (property[1].type) {
+                        case 'object':
+                          value = propertyToString(property[1])
+                          break
+                        case 'string':
+                          value = '"' + (property[1] as StringValue).value + '"'
+                          break
+                        case 'null':
+                          value = 'null'
+                          break
+                        case 'number':
+                          value = (property[1] as NumberValue).value.toString()
+                          break
+                        case 'boolean':
+                          value = (property[1] as BooleanValue).value.toString()
+                          break
+                        default:
+                          value = 'fn'
+                      }
+                      return `{ ${property[0]}: ${value} }`
+                    })
+                    .join(', ')
+                }
+                return propertyToString(arg as ObjectValue)
+              case 'function':
+              case 'native-function':
+                return (arg as NativeFunctionValue).type
+              default:
+                return arg
+            }
+          })
+          .join(', ')
+      )
       return makeNull()
     }),
     true

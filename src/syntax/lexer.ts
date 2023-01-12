@@ -11,6 +11,7 @@
  */
 export const enum TokenType {
   // Literal types
+  String = 'string',
   Number = 'number',
   Boolean = 'boolean',
   Identifier = 'identifier',
@@ -36,6 +37,9 @@ export const enum TokenType {
   // Operations
   BinaryOperator = 'binary-operator',
   EqualOperator = 'equal-operator',
+
+  // Quotes
+  DoubleQuotes = 'double-quotes',
 }
 
 export interface Token {
@@ -174,6 +178,23 @@ export function tokenize(sourceCode: string): Token[] {
         value: identifier,
         type: reserved || TokenType.Identifier,
       })
+      continue
+    }
+
+    // strings
+    if (codeChars[0] === '"') {
+      codeChars.shift() // ignores opening quotes
+
+      let string = ''
+      while (codeChars.length > 0 && codeChars[0] !== '"') {
+        string += codeChars.shift()
+      }
+      tokens.push({
+        value: string,
+        type: TokenType.String,
+      })
+
+      codeChars.shift() // ignore closing quotes
       continue
     }
 

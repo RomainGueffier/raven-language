@@ -11,6 +11,7 @@ import type {
   Program,
   Property,
   Statement,
+  StringLiteral,
   VarDeclaration,
 } from './ast.js'
 import { Token, tokenize, TokenType } from './lexer.js'
@@ -64,6 +65,12 @@ export default class Parser {
           type: 'NumericLiteral',
           value: parseFloat(value),
         } as NumericLiteral
+
+      case TokenType.String:
+        return {
+          type: 'StringLiteral',
+          value,
+        } as StringLiteral
 
       case TokenType.ParenthesisOpen:
         const expression = this.#parseExpression()

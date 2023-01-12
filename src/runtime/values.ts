@@ -4,6 +4,7 @@ import Environment from './environment.js'
 export type ValueType =
   | 'null'
   | 'number'
+  | 'string'
   | 'boolean'
   | 'object'
   | 'native-function'
@@ -38,6 +39,15 @@ export interface NumberValue extends RuntimeValue {
 
 export function makeNumber(n = 0): NumberValue {
   return { type: 'number', value: n }
+}
+
+export interface StringValue extends RuntimeValue {
+  type: 'string'
+  value: string
+}
+
+export function makeString(s = ''): StringValue {
+  return { type: 'string', value: s }
 }
 
 export interface ObjectValue extends RuntimeValue {
