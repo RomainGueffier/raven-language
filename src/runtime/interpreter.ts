@@ -7,16 +7,16 @@ import type {
   Program,
   Statement,
   VarDeclaration,
-} from '../syntax/ast'
-import Environment from './environment'
+} from '../syntax/ast.js'
+import Environment from './environment.js'
 import {
   evalAssignment,
   evalBinaryExpression,
   evalIdentifier,
   evalObjectExpression,
-} from './eval/expressions'
-import { evalProgram, evalVarDeclaration } from './eval/statements'
-import { NumberValue, RuntimeValue } from './values'
+} from './eval/expressions.js'
+import { evalProgram, evalVarDeclaration } from './eval/statements.js'
+import { NumberValue, RuntimeValue } from './values.js'
 
 export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
   switch (astNode.type) {

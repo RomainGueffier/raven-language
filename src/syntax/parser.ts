@@ -11,8 +11,8 @@ import type {
   Property,
   Statement,
   VarDeclaration,
-} from './ast'
-import { Token, tokenize, TokenType } from './lexer'
+} from './ast.js'
+import { Token, tokenize, TokenType } from './lexer.js'
 
 export default class Parser {
   #tokens: Token[] = []

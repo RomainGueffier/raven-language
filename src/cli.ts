@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import readline from 'node:readline'
-import main from './main'
+import main from './main.js'
 
 const args = process.argv?.slice(2)
 

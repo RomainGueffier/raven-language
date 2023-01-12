@@ -1,4 +1,4 @@
-import { makeBoolean, makeNull, RuntimeValue } from './values'
+import { makeBoolean, makeNull, RuntimeValue } from './values.js'
 
 export function createGlobalEnvironment() {
   const env = new Environment()

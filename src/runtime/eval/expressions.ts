@@ -3,10 +3,10 @@ import {
   BinaryExpression,
   Identifier,
   ObjectLiteral,
-} from '../../syntax/ast'
-import Environment from '../environment'
-import { evaluate } from '../interpreter'
-import { makeNull, NumberValue, ObjectValue, RuntimeValue } from '../values'
+} from '../../syntax/ast.js'
+import Environment from '../environment.js'
+import { evaluate } from '../interpreter.js'
+import { makeNull, NumberValue, ObjectValue, RuntimeValue } from '../values.js'
 
 export function evalNumericBinaryExpression(
   left: number,

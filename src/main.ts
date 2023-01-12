@@ -1,7 +1,7 @@
 import util from 'node:util'
-import Parser from './syntax/parser'
-import { createGlobalEnvironment } from './runtime/environment'
-import { evaluate } from './runtime/interpreter'
+import Parser from './syntax/parser.js'
+import { createGlobalEnvironment } from './runtime/environment.js'
+import { evaluate } from './runtime/interpreter.js'
 
 const env = createGlobalEnvironment()
 const parser = new Parser()

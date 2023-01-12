@@ -1,7 +1,7 @@
-import { Program, VarDeclaration } from '../../syntax/ast'
-import Environment from '../environment'
-import { evaluate } from '../interpreter'
-import { makeNull, RuntimeValue } from '../values'
+import { Program, VarDeclaration } from '../../syntax/ast.js'
+import Environment from '../environment.js'
+import { evaluate } from '../interpreter.js'
+import { makeNull, RuntimeValue } from '../values.js'
 
 export function evalVarDeclaration(
   declaration: VarDeclaration,
