@@ -1,6 +1,7 @@
 import type {
   AssignmentExpression,
   BinaryExpression,
+  CallExpression,
   Identifier,
   NumericLiteral,
   ObjectLiteral,
@@ -12,6 +13,7 @@ import Environment from './environment.js'
 import {
   evalAssignment,
   evalBinaryExpression,
+  evalCallExpression,
   evalIdentifier,
   evalObjectExpression,
 } from './eval/expressions.js'
@@ -29,6 +31,9 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValue {
 
     case 'ObjectLiteral':
       return evalObjectExpression(astNode as ObjectLiteral, env)
+
+    case 'CallExpression':
+      return evalCallExpression(astNode as CallExpression, env)
 
     case 'AssignmentExpression':
       return evalAssignment(astNode as AssignmentExpression, env)

@@ -8,6 +8,7 @@ export type NodeType =
   // Statements
   | 'Program'
   | 'VarDeclaration'
+  | 'FunctionDeclaration'
 
   // Expressions
   | 'AssignmentExpression'
@@ -36,6 +37,13 @@ export interface VarDeclaration extends Statement {
   constant: boolean
   identifier: string
   value?: Expression
+}
+
+export interface FunctionDeclaration extends Statement {
+  type: 'FunctionDeclaration'
+  parameters: string[]
+  name: string
+  body: Statement[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

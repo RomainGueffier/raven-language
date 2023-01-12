@@ -1,4 +1,10 @@
-import { makeBoolean, makeNull, RuntimeValue } from './values.js'
+import {
+  makeBoolean,
+  makeNativeFunction,
+  makeNull,
+  makeNumber,
+  RuntimeValue,
+} from './values.js'
 
 export function createGlobalEnvironment() {
   const env = new Environment()
@@ -6,6 +12,20 @@ export function createGlobalEnvironment() {
   env.declareVariable('true', makeBoolean(true), true)
   env.declareVariable('false', makeBoolean(false), true)
   env.declareVariable('null', makeNull(), true)
+
+  // native methods
+  env.declareVariable(
+    'print',
+    makeNativeFunction((args, _scope) => {
+      console.log(...args)
+      return makeNull()
+    }),
+    true
+  )
+  const timeFunction = (_args: RuntimeValue[], _env: Environment) => {
+    return makeNumber(Date.now())
+  }
+  env.declareVariable('time', makeNativeFunction(timeFunction), true)
 
   return env
 }

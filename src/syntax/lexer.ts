@@ -18,6 +18,7 @@ export const enum TokenType {
   // keywords
   Let = 'mutable-var',
   Const = 'constant-var',
+  Fn = 'function',
 
   // Grouping
   ParenthesisOpen = 'parenthesis-open',
@@ -45,6 +46,7 @@ export interface Token {
 const TOKEN_RESERVED_KEYWORDS: Record<string, TokenType> = {
   let: TokenType.Let,
   const: TokenType.Const,
+  fn: TokenType.Fn,
 }
 
 /**

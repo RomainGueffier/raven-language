@@ -1,12 +1,19 @@
 import {
   AssignmentExpression,
   BinaryExpression,
+  CallExpression,
   Identifier,
   ObjectLiteral,
 } from '../../syntax/ast.js'
 import Environment from '../environment.js'
 import { evaluate } from '../interpreter.js'
-import { makeNull, NumberValue, ObjectValue, RuntimeValue } from '../values.js'
+import {
+  NativeFunctionValue,
+  makeNull,
+  NumberValue,
+  ObjectValue,
+  RuntimeValue,
+} from '../values.js'
 
 export function evalNumericBinaryExpression(
   left: number,
@@ -87,4 +94,19 @@ export function evalObjectExpression(
   })
 
   return object
+}
+
+export function evalCallExpression(
+  expression: CallExpression,
+  env: Environment
+): RuntimeValue {
+  // evaluate function args
+  const args = expression.args.map((arg) => evaluate(arg, env))
+  // evaluate function itself
+  const fn = evaluate(expression.caller, env)
+
+  if (fn.type !== 'function')
+    throw `Cannot call a value that is not a function: ${JSON.stringify(fn)}`
+
+  return (fn as NativeFunctionValue).call(args, env)
 }

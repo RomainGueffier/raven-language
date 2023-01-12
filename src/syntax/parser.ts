@@ -3,6 +3,7 @@ import type {
   BinaryExpression,
   CallExpression,
   Expression,
+  FunctionDeclaration,
   Identifier,
   MemberExpression,
   NumericLiteral,
@@ -257,6 +258,52 @@ export default class Parser {
     return declaration
   }
 
+  #parseFunctionDeclaration(): Statement {
+    this.#next() // eat fn keyword
+    const name = this.#expect(
+      TokenType.Identifier,
+      'Expected function name following fn keyword'
+    ).value
+
+    const args = this.#parseArgs()
+    const parameters: string[] = []
+    args.forEach((arg) => {
+      if (arg.type !== 'Identifier') {
+        console.log(arg)
+        throw `Inside function declaration we expect parameter to be of type string`
+      }
+
+      parameters.push((arg as Identifier).symbol)
+    })
+
+    this.#expect(
+      TokenType.CurlyBracketOpen,
+      'Expected function body following declaration'
+    )
+
+    const body: Statement[] = []
+    while (
+      this.#at().type !== TokenType.EOF &&
+      this.#at().type !== TokenType.CurlyBracketClose
+    ) {
+      body.push(this.#parseStatement())
+    }
+
+    this.#expect(
+      TokenType.CurlyBracketClose,
+      'Closing curly bracket expected inside function declaration'
+    )
+
+    const fn: FunctionDeclaration = {
+      body,
+      name,
+      parameters,
+      type: 'FunctionDeclaration',
+    }
+
+    return fn
+  }
+
   #parseObjectExpression(): Expression {
     if (this.#at().type !== TokenType.CurlyBracketOpen) {
       return this.#parseAdditiveExpression()
@@ -333,6 +380,8 @@ export default class Parser {
       case TokenType.Let:
       case TokenType.Const:
         return this.#parseVarDeclaration()
+      case TokenType.Fn:
+        return this.#parseFunctionDeclaration()
       default:
         return this.#parseExpression()
     }

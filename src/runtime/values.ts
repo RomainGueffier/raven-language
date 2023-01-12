@@ -1,4 +1,6 @@
-export type ValueType = 'null' | 'number' | 'boolean' | 'object'
+import Environment from './environment.js'
+
+export type ValueType = 'null' | 'number' | 'boolean' | 'object' | 'function'
 
 export interface RuntimeValue {
   type: ValueType
@@ -34,4 +36,18 @@ export function makeNumber(n = 0): NumberValue {
 export interface ObjectValue extends RuntimeValue {
   type: 'object'
   properties: Map<string, RuntimeValue>
+}
+
+export type FunctionCall = (
+  args: RuntimeValue[],
+  env: Environment
+) => RuntimeValue
+
+export interface NativeFunctionValue extends RuntimeValue {
+  type: 'function'
+  call: FunctionCall
+}
+
+export function makeNativeFunction(call: FunctionCall): NativeFunctionValue {
+  return { type: 'function', call }
 }
