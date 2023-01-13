@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --watch raven --ext json,md,png,svg --exec \"cp -R raven ~/.vscode/extensions/\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "generator-code": "^1.7.2",
+    "nodemon": "^2.0.20",
     "yo": "^4.3.1"
   }
 }
