@@ -3,6 +3,7 @@ const AGE = 28;
 
 print(AGE + x)
 
+// output greetings with name and age
 fn greet (name, age) {
   print("hello", name, ", you have ", age, " years old")
 }

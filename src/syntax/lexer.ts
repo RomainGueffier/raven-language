@@ -40,6 +40,10 @@ export const enum TokenType {
 
   // Quotes
   DoubleQuotes = 'double-quotes',
+
+  // Comments
+  CommentInline = 'comment-inline',
+  CommentBlock = 'comment-block',
 }
 
 export interface Token {
@@ -64,6 +68,14 @@ export function tokenize(sourceCode: string): Token[] {
   const codeChars = sourceCode.split('')
 
   while (codeChars.length > 0) {
+    // removes inline comments
+    if (codeChars[0] === '/' && codeChars?.[1] === '/') {
+      while (codeChars.length > 0 && !codeChars[0].match(/\r|\n/)) {
+        codeChars.shift()
+        continue
+      }
+    }
+
     // skippable tabs, return, spaces
     if (codeChars[0].match(/\n|\s|\r|\t/)) {
       codeChars.shift()

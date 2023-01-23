@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Raven",
   "patterns": [
+    { "include": "#comments" },
     {
       "include": "#keywords"
     },
@@ -20,6 +21,14 @@
     { "include": "#expression" }
   ],
   "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.rv",
+          "match": "((?://).*)$"
+        }
+      ]
+    },
     "keywords": {
       "patterns": [
         {
