@@ -26,14 +26,19 @@
         {
           "name": "comment.line.double-slash.rv",
           "match": "((?://).*)$"
+        },
+        {
+          "name": "comment.block.rv",
+          "begin": "/\\*",
+          "end": "\\*/"
         }
       ]
     },
     "keywords": {
       "patterns": [
         {
-          "name": "keyword.control.rv",
-          "match": "\\b(if|while|for|return)\\b"
+          "name": "storage.type.rv",
+          "match": "\\b(let|const|fn)\\b"
         }
       ]
     },

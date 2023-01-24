@@ -72,8 +72,16 @@ export function tokenize(sourceCode: string): Token[] {
     if (codeChars[0] === '/' && codeChars?.[1] === '/') {
       while (codeChars.length > 0 && !codeChars[0].match(/\r|\n/)) {
         codeChars.shift()
-        continue
       }
+    }
+
+    // removes bloc comments
+    if (codeChars[0] === '/' && codeChars?.[1] === '*') {
+      while (codeChars.length > 0 && codeChars.slice(0, 2).join('') !== '*/') {
+        codeChars.shift()
+      }
+      codeChars.splice(0, 2) // remove ending */ double character
+      continue
     }
 
     // skippable tabs, return, spaces

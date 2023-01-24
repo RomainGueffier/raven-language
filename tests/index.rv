@@ -1,9 +1,12 @@
 let x = 1 + 1 * (5 / 2);
 const AGE = 28;
 
+/* 
+ Comment bloc
+*/
 print(AGE + x)
 
-// output greetings with name and age
+// Comment single line
 fn greet (name, age) {
   print("hello", name, ", you have ", age, " years old")
 }
