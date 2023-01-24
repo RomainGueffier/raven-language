@@ -1,5 +1,7 @@
 let x = 1 + 1 * (5 / 2);
 const AGE = 28;
+let hasJob = false;
+let description = "hello my friend"
 
 /* 
  Comment bloc

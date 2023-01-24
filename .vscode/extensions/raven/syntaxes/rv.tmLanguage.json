@@ -3,6 +3,7 @@
   "name": "Raven",
   "patterns": [
     { "include": "#comments" },
+    { "include": "#entities" },
     {
       "include": "#keywords"
     },
@@ -34,6 +35,17 @@
         }
       ]
     },
+    "entities": {
+      "patterns": [
+        {
+          "match": "^\\s*(fn)\\s+(\\w+)",
+          "captures": {
+            "1": { "name": "storage.type.function" },
+            "2": { "name": "entity.name.function" }
+          }
+        }
+      ]
+    },
     "keywords": {
       "patterns": [
         {
@@ -46,7 +58,7 @@
       "patterns": [
         {
           "name": "entity.name.function.member.rv",
-          "match": "\\b(print|time|bool|null)\\b"
+          "match": "\\b(print|time|bool|null|true|false)\\b"
         }
       ]
     },
